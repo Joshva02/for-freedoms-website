@@ -1,0 +1,63 @@
+/* Custom styles for Latest carousel */
+.latest-carousel {
+  position: relative;
+  padding: 0 50px;
+}
+
+/* Navigation buttons */
+.latest-carousel .swiper-button-prev,
+.latest-carousel .swiper-button-next {
+  width: 40px;
+  height: 40px;
+  background-color: white;
+  border-radius: 50%;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s;
+}
+
+.latest-carousel .swiper-button-prev:hover,
+.latest-carousel .swiper-button-next:hover {
+  background-color: #f9fafb;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.latest-carousel .swiper-button-prev::after,
+.latest-carousel .swiper-button-next::after {
+  font-size: 20px;
+  color: #374151;
+  font-weight: bold;
+}
+
+/* Pagination dots */
+.latest-carousel .swiper-pagination {
+  bottom: -30px;
+}
+
+.latest-carousel .swiper-pagination-bullet {
+  width: 8px;
+  height: 8px;
+  background-color: #d1d5db;
+  opacity: 1;
+}
+
+.latest-carousel .swiper-pagination-bullet-active {
+  background-color: #e91e63;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .latest-carousel {
+    padding: 0 30px;
+  }
+  
+  .latest-carousel .swiper-button-prev,
+  .latest-carousel .swiper-button-next {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .latest-carousel .swiper-button-prev::after,
+  .latest-carousel .swiper-button-next::after {
+    font-size: 16px;
+  }
+}
