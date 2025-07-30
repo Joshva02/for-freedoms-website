@@ -8,6 +8,8 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import Link from "next/link"
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Autoplay } from 'swiper/modules'
+import TransitionLink from "@/components/TransitionLink"
+import SharedImageTransition from "@/components/SharedImageTransition"
 import 'swiper/css'
 import './carousel-styles.css'
 
@@ -156,36 +158,45 @@ export default function HomePage() {
 
       {/* Annual Reports - Contact Sheet Grid */}
       <section className="container mx-auto px-4 py-12">
-        <h2 className="text-2xl font-bold text-gray-900 mb-8">Annual Reports</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-8">
+          Annual Reports
+        </h2>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 max-w-7xl mx-auto">
-          {allReports.map((report) => (
-            <Link key={report.year} href={report.href}>
-              <div className="group cursor-pointer">
-                <div className="aspect-[2550/1650] bg-gray-100 rounded-lg overflow-hidden mb-2">
-                  <img
-                    src={report.coverImage}
-                    alt={`${report.year} Annual Report Cover`}
-                    className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
-                  />
-                </div>
-                <div className="text-center">
-                  <div className="text-lg font-bold text-gray-900 mb-1">
-                    {report.year}
+          {allReports.map((report, index) => (
+            <div key={report.year}>
+              <TransitionLink href={report.href}>
+                <div className="group cursor-pointer">
+                  <SharedImageTransition 
+                    layoutId={`report-image-${report.year}`}
+                    className="aspect-[2550/1650] bg-gray-100 rounded-lg overflow-hidden mb-2"
+                  >
+                    <img
+                      src={report.coverImage}
+                      alt={`${report.year} Annual Report Cover`}
+                      className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
+                    />
+                  </SharedImageTransition>
+                  <div className="text-center">
+                    <div className="text-lg font-bold text-gray-900 mb-1">
+                      {report.year}
+                    </div>
+                    <div className="text-xs text-gray-600">
+                      {report.title}
+                    </div>
                   </div>
-                  <div className="text-xs text-gray-600">
-                    {report.title}
-                  </div>
                 </div>
-              </div>
-            </Link>
+              </TransitionLink>
+            </div>
           ))}
         </div>
       </section>
 
       {/* Featured Projects Section */}
       <section className="container mx-auto px-4 py-12">
-        <h2 className="text-2xl font-bold text-gray-900 mb-8">Featured Projects</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-8">
+          Featured Projects
+        </h2>
 
         <div className="max-w-4xl mx-auto">
           <Swiper

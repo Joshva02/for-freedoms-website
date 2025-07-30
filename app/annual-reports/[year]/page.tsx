@@ -8,6 +8,8 @@ import Link from "next/link"
 import { useParams } from "next/navigation"
 import { annualReportImages } from "@/lib/annual-report-images"
 import { cn } from "@/lib/utils"
+import { motion } from "framer-motion"
+import SharedImageTransition from "@/components/SharedImageTransition"
 
 export default function AnnualReportPage() {
   const params = useParams()
@@ -99,6 +101,16 @@ export default function AnnualReportPage() {
     setShowTOC(false)
     setCurrentPage(pageNumber)
   }
+
+  // Ensure we start at page 1 when component mounts
+  useEffect(() => {
+    setCurrentPage(1)
+    // Scroll to first slide if needed
+    const firstSlide = document.getElementById('page-1')
+    if (firstSlide) {
+      firstSlide.scrollIntoView({ behavior: 'instant', block: 'start' })
+    }
+  }, [])
 
   return (
     <div className="relative min-h-screen bg-white">
@@ -208,37 +220,68 @@ export default function AnnualReportPage() {
         {imageMode === 'viewport' ? (
           // Viewport height mode with snap scrolling
           <div className="h-screen overflow-y-auto snap-y snap-mandatory">
-            {currentReport.pages.map((page) => (
+            {currentReport.pages.map((page, index) => (
               <div
                 key={page.id}
                 id={`page-${page.id}`}
                 data-page={page.id}
                 className="slide h-screen w-full flex items-center justify-center snap-start snap-always"
               >
-                <img
-                  src={page.src}
-                  alt={page.alt}
-                  className="h-screen w-auto"
-                />
+                {index === 0 ? (
+                  // First slide uses shared element transition
+                  <SharedImageTransition 
+                    layoutId={`report-image-${year}`}
+                    className="h-screen w-auto"
+                  >
+                    <img
+                      src={page.src}
+                      alt={page.alt}
+                      className="h-screen w-auto"
+                    />
+                  </SharedImageTransition>
+                ) : (
+                  // Other slides use regular images
+                  <img
+                    src={page.src}
+                    alt={page.alt}
+                    className="h-screen w-auto"
+                  />
+                )}
               </div>
             ))}
           </div>
         ) : (
           // Stacked mode - images flow naturally one after another
           <div className="w-full">
-            {currentReport.pages.map((page) => (
+            {currentReport.pages.map((page, index) => (
               <div
                 key={page.id}
                 id={`page-${page.id}`}
                 data-page={page.id}
                 className="slide w-full"
               >
-                <img
-                  src={page.src}
-                  alt={page.alt}
-                  className="w-full h-auto block"
-                  style={{ display: 'block', margin: 0, padding: 0 }}
-                />
+                {index === 0 ? (
+                  // First slide uses shared element transition
+                  <SharedImageTransition 
+                    layoutId={`report-image-${year}`}
+                    className="w-full h-auto block"
+                  >
+                    <img
+                      src={page.src}
+                      alt={page.alt}
+                      className="w-full h-auto block"
+                      style={{ display: 'block', margin: 0, padding: 0 }}
+                    />
+                  </SharedImageTransition>
+                ) : (
+                  // Other slides use regular images
+                  <img
+                    src={page.src}
+                    alt={page.alt}
+                    className="w-full h-auto block"
+                    style={{ display: 'block', margin: 0, padding: 0 }}
+                  />
+                )}
               </div>
             ))}
           </div>
