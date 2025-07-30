@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 import { ArrowLeft, Download, List } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
@@ -9,21 +9,12 @@ import { useParams } from "next/navigation"
 import { annualReportImages } from "@/lib/annual-report-images"
 import { cn } from "@/lib/utils"
 
-// Import Swiper React components
-import { Swiper, SwiperSlide } from 'swiper/react'
-import { Pagination, Mousewheel, Keyboard } from 'swiper/modules'
-
-// Import Swiper styles
-import 'swiper/css'
-import 'swiper/css/pagination'
-import './swiper-styles.css'
-
 export default function AnnualReportPage() {
   const params = useParams()
   const year = params.year as string
   const [showTOC, setShowTOC] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
-  const swiperRef = useRef<any>(null)
+  const [imageMode, setImageMode] = useState<'viewport' | 'stacked'>('viewport')
 
   const reports = {
     "2023": {
@@ -48,23 +39,65 @@ export default function AnnualReportPage() {
 
   const currentReport = reports[year as keyof typeof reports] || reports["2024"]
 
-  // Table of contents sections
-  const tocSections = [
-    { page: 1, title: "Cover" },
-    { page: 2, title: "Executive Summary" },
-    { page: 5, title: "Our Mission" },
-    { page: 8, title: "Community Impact" },
-    { page: 12, title: "Programs & Initiatives" },
-    { page: 16, title: "Artist Collaborations" },
-    { page: 20, title: "Financial Overview" },
-    { page: 24, title: "Looking Forward" },
-  ]
+  // Check if images should be stacked based on viewport and image aspect ratio
+  useEffect(() => {
+    const checkImageMode = () => {
+      // Get the first image to check its natural dimensions
+      const img = new Image()
+      img.onload = () => {
+        const imageAspectRatio = img.naturalWidth / img.naturalHeight
+        
+        // Calculate what the image width would be if height = viewport height
+        const imageWidthAtViewportHeight = window.innerHeight * imageAspectRatio
+        
+        // If the image would be wider than the viewport when at viewport height, switch to stacked mode
+        if (imageWidthAtViewportHeight > window.innerWidth) {
+          setImageMode('stacked')
+        } else {
+          setImageMode('viewport')
+        }
+      }
+      
+      if (currentReport.pages.length > 0) {
+        img.src = currentReport.pages[0].src
+      }
+    }
+
+    checkImageMode()
+    window.addEventListener('resize', checkImageMode)
+    return () => window.removeEventListener('resize', checkImageMode)
+  }, [currentReport.pages])
+
+  // Intersection observer for tracking visible page
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const pageNum = parseInt(entry.target.getAttribute('data-page') || '1')
+            setCurrentPage(pageNum)
+          }
+        })
+      },
+      {
+        threshold: 0.5,
+        rootMargin: '0px'
+      }
+    )
+
+    const slides = document.querySelectorAll('.slide')
+    slides.forEach((slide) => observer.observe(slide))
+
+    return () => observer.disconnect()
+  }, [imageMode])
 
   const handleSlideToPage = (pageNumber: number) => {
-    if (swiperRef.current) {
-      swiperRef.current.slideTo(pageNumber - 1)
+    const element = document.getElementById(`page-${pageNumber}`)
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
     setShowTOC(false)
+    setCurrentPage(pageNumber)
   }
 
   return (
@@ -165,46 +198,51 @@ export default function AnnualReportPage() {
         </SheetContent>
       </Sheet>
 
-      {/* Swiper Carousel */}
-      <div className="w-full bg-white">
-        <Swiper
-          direction={'vertical'}
-          slidesPerView={1}
-          spaceBetween={0}
-          mousewheel={true}
-          keyboard={{
-            enabled: true,
-          }}
-          pagination={{
-            clickable: true,
-            dynamicBullets: true,
-          }}
-          modules={[Pagination, Mousewheel, Keyboard]}
-          onSlideChange={(swiper) => setCurrentPage(swiper.activeIndex + 1)}
-          onSwiper={(swiper) => {
-            swiperRef.current = swiper
-          }}
-          className="h-full w-full annual-report-swiper"
-        >
-          {currentReport.pages.map((page, index) => (
-            <SwiperSlide key={page.id} className="relative h-full">
-              <div className="h-full w-full p-2 md:p-8 flex items-center justify-center">
-                <div className="w-full max-w-4xl md:max-w-6xl border-4 border-white rounded-lg overflow-hidden">
-                  <img
-                    src={page.src}
-                    alt={page.alt}
-                    className="w-full h-auto md:h-full md:w-full md:object-contain"
-                  />
-                </div>
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </div>
-
       {/* Page Counter */}
       <div className="fixed bottom-4 right-4 md:bottom-8 md:right-8 z-40 text-gray-700 bg-white/90 backdrop-blur-sm border border-gray-200 px-3 py-1.5 md:px-4 md:py-2 rounded-full text-sm md:text-base">
         {currentPage} / {currentReport.pages.length}
+      </div>
+
+      {/* PDF Viewer */}
+      <div className="w-full">
+        {imageMode === 'viewport' ? (
+          // Viewport height mode with snap scrolling
+          <div className="h-screen overflow-y-auto snap-y snap-mandatory">
+            {currentReport.pages.map((page) => (
+              <div
+                key={page.id}
+                id={`page-${page.id}`}
+                data-page={page.id}
+                className="slide h-screen w-full flex items-center justify-center snap-start snap-always"
+              >
+                <img
+                  src={page.src}
+                  alt={page.alt}
+                  className="h-screen w-auto"
+                />
+              </div>
+            ))}
+          </div>
+        ) : (
+          // Stacked mode - images flow naturally one after another
+          <div className="w-full">
+            {currentReport.pages.map((page) => (
+              <div
+                key={page.id}
+                id={`page-${page.id}`}
+                data-page={page.id}
+                className="slide w-full"
+              >
+                <img
+                  src={page.src}
+                  alt={page.alt}
+                  className="w-full h-auto block"
+                  style={{ display: 'block', margin: 0, padding: 0 }}
+                />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )

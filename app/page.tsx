@@ -1,46 +1,89 @@
 "use client"
 
 import { useState } from "react"
-import { Search, Menu } from "lucide-react"
+import { Menu } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import Link from "next/link"
 import { Swiper, SwiperSlide } from 'swiper/react'
-import { Navigation, Pagination, Autoplay } from 'swiper/modules'
+import { Autoplay } from 'swiper/modules'
 import 'swiper/css'
-import 'swiper/css/navigation'
-import 'swiper/css/pagination'
 import './carousel-styles.css'
 
 export default function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
-  const latestReports = [
-    {
-      year: "2023",
-      title: "Art as Civic Action",
-      description: "Our comprehensive look at community engagement through artistic expression",
-      href: "/annual-reports/2023",
-    },
+  const allReports = [
     {
       year: "2024",
       title: "Community is Collaboration",
       description: "Highlighting partnerships and collective healing initiatives",
       href: "/annual-reports/2024",
+      coverImage: "/annual-report-2024/FFCongressImpactReport2024-1.jpg"
     },
     {
-      year: "2025",
-      title: "Where Do We Go From Here?",
-      description: "Looking forward to the future of civic engagement",
-      href: "/annual-reports/2025",
+      year: "2023",
+      title: "Art as Civic Action",
+      description: "Our comprehensive look at community engagement through artistic expression",
+      href: "/annual-reports/2023",
+      coverImage: "/placeholder.svg?height=600&width=400&text=2023"
     },
+    {
+      year: "2022",
+      title: "Building Communities",
+      description: "Previous year initiatives and community building",
+      href: "/annual-reports/2022",
+      coverImage: "/placeholder.svg?height=600&width=400&text=2022"
+    },
+    {
+      year: "2021",
+      title: "Resilience Through Art",
+      description: "Navigating challenges through creative expression",
+      href: "/annual-reports/2021",
+      coverImage: "/placeholder.svg?height=600&width=400&text=2021"
+    },
+    {
+      year: "2020",
+      title: "Adapting & Growing",
+      description: "Innovation in times of change",
+      href: "/annual-reports/2020",
+      coverImage: "/placeholder.svg?height=600&width=400&text=2020"
+    },
+    {
+      year: "2019",
+      title: "Expanding Horizons",
+      description: "Reaching new communities and partnerships",
+      href: "/annual-reports/2019",
+      coverImage: "/placeholder.svg?height=600&width=400&text=2019"
+    },
+    {
+      year: "2018",
+      title: "Foundation Building",
+      description: "Establishing core programs and initiatives",
+      href: "/annual-reports/2018",
+      coverImage: "/placeholder.svg?height=600&width=400&text=2018"
+    },
+    {
+      year: "2017",
+      title: "Early Impact",
+      description: "First steps in civic engagement through art",
+      href: "/annual-reports/2017",
+      coverImage: "/placeholder.svg?height=600&width=400&text=2017"
+    },
+    {
+      year: "2016",
+      title: "The Beginning",
+      description: "For Freedoms launches",
+      href: "/annual-reports/2016",
+      coverImage: "/placeholder.svg?height=600&width=400&text=2016"
+    }
   ]
 
   const menuItems = [
-    { title: "Our Work", href: "#work" },
-    { title: "About Us", href: "#about" },
-    { title: "Our Shop", href: "#shop" },
+    { title: "What We Do", href: "#work" },
+    { title: "Who We Are", href: "#about" },
+    { title: "Shop", href: "#shop" },
     { title: "Support", href: "#support" },
     { title: "Annual Reports", href: "/annual-reports" },
   ]
@@ -52,134 +95,143 @@ export default function HomePage() {
         <nav className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-12">
-              <Link href="#work" className="text-gray-900 hover:text-[#E91E63] transition-colors font-medium">
-                Our Work
+            <div className="hidden md:grid md:grid-cols-5 items-center w-full max-w-4xl mx-auto">
+              <Link href="#work" className="text-gray-900 hover:text-[#E91E63] transition-colors font-medium text-center">
+                What We Do
               </Link>
-              <Link href="#about" className="text-gray-900 hover:text-[#E91E63] transition-colors font-medium">
-                About Us
+              <Link href="#about" className="text-gray-900 hover:text-[#E91E63] transition-colors font-medium text-center">
+                Who We Are
               </Link>
-            </div>
-
-            {/* Logo */}
-            <div className="flex items-center">
-                    <img src="/Logo.svg" alt="FOR FREEDOMS" />
-               
-            </div>
-
-            {/* Desktop Navigation Right */}
-            <div className="hidden md:flex items-center space-x-12">
-              <Link href="#shop" className="text-gray-900 hover:text-[#E91E63] transition-colors font-medium">
-                Our Shop
+              
+              {/* Logo - Dead Center */}
+              <div className="flex items-center justify-center">
+                <img src="/Logo.svg" alt="FOR FREEDOMS" />
+              </div>
+              
+              <Link href="#shop" className="text-gray-900 hover:text-[#E91E63] transition-colors font-medium text-center">
+                Shop
               </Link>
-              <Link href="#support" className="text-gray-900 hover:text-[#E91E63] transition-colors font-medium">
+              <Link href="#support" className="text-gray-900 hover:text-[#E91E63] transition-colors font-medium text-center">
                 Support
               </Link>
             </div>
-
-            {/* Mobile Menu Button */}
-            <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="md:hidden">
-                  <Menu className="h-6 w-6" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-80 bg-gradient-to-br from-[#E91E63] to-[#2196F3] text-white">
-                <div className="py-6">
-                  <h2 className="text-xl font-bold mb-6">Navigation</h2>
-                  <div className="space-y-4">
-                    {menuItems.map((item, index) => (
-                      <Link
-                        key={index}
-                        href={item.href}
-                        className="block py-3 px-4 rounded-lg hover:bg-white/20 transition-colors"
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        {item.title}
-                      </Link>
-                    ))}
+            
+            {/* Mobile Layout */}
+            <div className="md:hidden flex items-center justify-between w-full">
+              {/* Mobile Logo */}
+              <div className="flex-1 flex items-center justify-center">
+                <img src="/Logo.svg" alt="FOR FREEDOMS" />
+              </div>
+              
+              {/* Mobile Menu Button */}
+              <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+                <SheetTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <Menu className="h-6 w-6" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right" className="w-80 bg-white text-black">
+                  <div className="py-6">
+                    <h2 className="text-xl font-bold mb-6 text-black">Navigation</h2>
+                    <div className="space-y-4">
+                      {menuItems.map((item, index) => (
+                        <Link
+                          key={index}
+                          href={item.href}
+                          className="block py-3 px-4 text-black hover:bg-gray-100 transition-colors rounded-lg"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          {item.title}
+                        </Link>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              </SheetContent>
-            </Sheet>
+                </SheetContent>
+              </Sheet>
+            </div>
           </div>
         </nav>
 
-        {/* Search Bar */}
-        <div className="container mx-auto px-4 pb-8">
-          <div className="max-w-md mx-auto relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-            <Input
-              type="text"
-              placeholder="Search"
-              className="pl-10 py-3 bg-gray-50 border-0 rounded-full focus:ring-2 focus:ring-[#E91E63] focus:bg-white transition-all"
-            />
-          </div>
-        </div>
       </header>
 
-      {/* Latest Section */}
+      {/* Annual Reports - Contact Sheet Grid */}
       <section className="container mx-auto px-4 py-12">
-        <h2 className="text-2xl font-bold text-gray-900 mb-8">Latest</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-8">Annual Reports</h2>
 
-        <div className="max-w-4xl mx-auto">
-          <Swiper
-            modules={[Navigation, Pagination, Autoplay]}
-            spaceBetween={20}
-            slidesPerView={1}
-            navigation
-            pagination={{ clickable: true }}
-            autoplay={{
-              delay: 3000,
-              disableOnInteraction: false,
-            }}
-            loop={true}
-            breakpoints={{
-              640: {
-                slidesPerView: 2,
-                spaceBetween: 20,
-              },
-              768: {
-                slidesPerView: 3,
-                spaceBetween: 30,
-              },
-            }}
-            className="latest-carousel"
-          >
-            {latestReports.map((report) => (
-              <SwiperSlide key={report.year}>
-                <Link href={report.href}>
-                  <div className="bg-gray-200 rounded-xl aspect-[4/3] flex items-center justify-center hover:bg-gray-300 transition-colors cursor-pointer group">
-                    <div className="text-center">
-                      <div className="text-3xl font-bold text-gray-700 mb-2 group-hover:text-[#E91E63] transition-colors">
-                        {report.year}
-                      </div>
-                      <div className="text-sm text-gray-600 px-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                        {report.title}
-                      </div>
-                    </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 max-w-7xl mx-auto">
+          {allReports.map((report) => (
+            <Link key={report.year} href={report.href}>
+              <div className="group cursor-pointer">
+                <div className="aspect-[2550/1650] bg-gray-100 rounded-lg overflow-hidden mb-2">
+                  <img
+                    src={report.coverImage}
+                    alt={`${report.year} Annual Report Cover`}
+                    className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
+                  />
+                </div>
+                <div className="text-center">
+                  <div className="text-lg font-bold text-gray-900 mb-1">
+                    {report.year}
                   </div>
-                </Link>
-              </SwiperSlide>
-            ))}
-          </Swiper>
+                  <div className="text-xs text-gray-600">
+                    {report.title}
+                  </div>
+                </div>
+              </div>
+            </Link>
+          ))}
         </div>
       </section>
 
-      {/* Collaborations Section */}
+      {/* Featured Projects Section */}
       <section className="container mx-auto px-4 py-12">
-        <h2 className="text-2xl font-bold text-gray-900 mb-8">Collaborations</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-8">Featured Projects</h2>
 
-        <div className="bg-gray-200 rounded-2xl aspect-[16/9] flex items-center justify-center hover:bg-gray-300 transition-colors cursor-pointer group">
-          <div className="text-center">
-            <div className="text-2xl font-bold text-gray-700 mb-4 group-hover:text-[#E91E63] transition-colors">
-              Artist Partnerships & Community Projects
-            </div>
-            <div className="text-gray-600 max-w-md mx-auto opacity-0 group-hover:opacity-100 transition-opacity">
-              Explore our collaborative works with artists, communities, and organizations working toward civic
-              engagement and social change.
-            </div>
-          </div>
+        <div className="max-w-4xl mx-auto">
+          <Swiper
+            modules={[Autoplay]}
+            spaceBetween={0}
+            slidesPerView={1}
+            autoplay={{
+              delay: 2000,
+              disableOnInteraction: false,
+            }}
+            loop={true}
+            className="featured-projects-carousel"
+          >
+            {[
+              {
+                id: 1,
+                image: "/placeholder.svg?height=600&width=800&text=Featured+Project+1"
+              },
+              {
+                id: 2,
+                image: "/placeholder.svg?height=600&width=800&text=Featured+Project+2"
+              },
+              {
+                id: 3,
+                image: "/placeholder.svg?height=600&width=800&text=Featured+Project+3"
+              },
+              {
+                id: 4,
+                image: "/placeholder.svg?height=600&width=800&text=Featured+Project+4"
+              },
+              {
+                id: 5,
+                image: "/placeholder.svg?height=600&width=800&text=Featured+Project+5"
+              }
+            ].map((project) => (
+              <SwiperSlide key={project.id}>
+                <div className="bg-gray-200 rounded-2xl aspect-[16/9] overflow-hidden">
+                  <img
+                    src={project.image}
+                    alt={`Featured Project ${project.id}`}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
         </div>
       </section>
 
@@ -196,16 +248,16 @@ export default function HomePage() {
             </p>
             <div className="flex flex-wrap justify-center gap-8 text-sm text-gray-600">
               <Link href="#work" className="hover:text-[#E91E63] transition-colors">
-                Our Work
+                What We Do
               </Link>
               <Link href="#about" className="hover:text-[#E91E63] transition-colors">
-                About Us
+                Who We Are
               </Link>
               <Link href="/annual-reports" className="hover:text-[#E91E63] transition-colors">
                 Annual Reports
               </Link>
               <Link href="#shop" className="hover:text-[#E91E63] transition-colors">
-                Our Shop
+                Shop
               </Link>
               <Link href="#support" className="hover:text-[#E91E63] transition-colors">
                 Support
