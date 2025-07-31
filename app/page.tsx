@@ -213,23 +213,27 @@ export default function HomePage() {
             {[
               {
                 id: 1,
-                image: "/placeholder.svg?height=600&width=800&text=Featured+Project+1"
+                image: "/images/carousel_1.jpeg"
               },
               {
                 id: 2,
-                image: "/placeholder.svg?height=600&width=800&text=Featured+Project+2"
+                image: "/images/carousel_2.jpeg"
               },
               {
                 id: 3,
-                image: "/placeholder.svg?height=600&width=800&text=Featured+Project+3"
+                image: "/images/carousel_3.jpeg"
               },
               {
                 id: 4,
-                image: "/placeholder.svg?height=600&width=800&text=Featured+Project+4"
+                image: "/images/carousel_4.jpeg"
               },
               {
                 id: 5,
-                image: "/placeholder.svg?height=600&width=800&text=Featured+Project+5"
+                image: "/images/carousel_5.jpeg"
+              },
+              {
+                id: 6,
+                image: "/images/carousel_6.jpeg"
               }
             ].map((project) => (
               <SwiperSlide key={project.id}>
