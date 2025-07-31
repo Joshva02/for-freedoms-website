@@ -119,16 +119,11 @@ export default function HomePage() {
             </div>
             
             {/* Mobile Layout */}
-            <div className="md:hidden flex items-center justify-between w-full">
-              {/* Mobile Logo */}
-              <div className="flex-1 flex items-center justify-center">
-                <img src="/Logo.svg" alt="FOR FREEDOMS" />
-              </div>
-              
-              {/* Mobile Menu Button */}
+            <div className="md:hidden relative w-full">
+              {/* Mobile Menu Button - Absolute Right */}
               <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
                 <SheetTrigger asChild>
-                  <Button variant="ghost" size="icon">
+                  <Button variant="ghost" size="icon" className="absolute right-0 top-1/2 -translate-y-1/2 z-10">
                     <Menu className="h-6 w-6" />
                   </Button>
                 </SheetTrigger>
@@ -150,6 +145,11 @@ export default function HomePage() {
                   </div>
                 </SheetContent>
               </Sheet>
+              
+              {/* Mobile Logo - True Center */}
+              <div className="flex items-center justify-center w-full">
+                <img src="/Logo.svg" alt="FOR FREEDOMS" />
+              </div>
             </div>
           </div>
         </nav>
